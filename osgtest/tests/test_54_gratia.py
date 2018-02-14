@@ -216,7 +216,7 @@ class TestGratia(osgunittest.OSGTestCase):
     def test_06_execute_gridftptransfer_probedriver(self):
         core.state['gratia.gridftp-transfer-running'] = False
         core.skip_ok_unless_installed('gratia-probe-gridftp-transfer', 'gratia-service', 'globus-gridftp-server-progs',
-                                      'globus-ftp-client', 'globus-proxy-utils', 'globus-gass-copy-progs')
+                                      'globus-ftp-client', 'voms-clients-cpp', 'globus-gass-copy-progs')
         self.skip_ok_unless(core.state['gridftp.started-server'], 'gridftp server not running')
         self.skip_bad_unless(core.state['gratia.gridftp-logs-copied'], 'gridftp logs not copied')
         if os.path.exists(core.config['gratia.log.file']):

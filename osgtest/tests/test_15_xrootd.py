@@ -55,7 +55,7 @@ export LCMAPS_DEBUG_LEVEL=5''',
 
         user = pwd.getpwnam("xrootd")
         if core.config['xrootd.gsi'] == "ON":
-            core.skip_ok_unless_installed('globus-proxy-utils')
+            core.skip_ok_unless_installed('voms-clients-cpp')
             core.install_cert('certs.xrootdcert', 'certs.hostcert', 'xrootd', 0644)
             core.install_cert('certs.xrootdkey', 'certs.hostkey', 'xrootd', 0400)
 

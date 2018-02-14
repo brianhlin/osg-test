@@ -16,7 +16,7 @@ class TestXrootd(osgunittest.OSGTestCase):
     def test_01_xrdcp_local_to_server(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-client', by_dependency=True)
         if core.config['xrootd.gsi'] == "ON":
-            core.skip_ok_unless_installed('globus-proxy-utils')
+            core.skip_ok_unless_installed('voms-clients-cpp')
         self.skip_bad_unless(core.state['xrootd.started-server'] is True, 'Server not running')
 
         hostname = socket.getfqdn()
@@ -45,7 +45,7 @@ class TestXrootd(osgunittest.OSGTestCase):
     def test_02_xrdcp_server_to_local(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-client', by_dependency=True)
         if core.config['xrootd.gsi'] == "ON":
-            core.skip_ok_unless_installed('globus-proxy-utils')
+            core.skip_ok_unless_installed('voms-clients-cpp')
         self.skip_bad_unless(core.state['xrootd.started-server'] is True, 'Server not running')
 
         hostname = socket.getfqdn()

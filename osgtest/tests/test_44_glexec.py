@@ -4,7 +4,7 @@ import osgtest.library.files as files
 import osgtest.library.osgunittest as osgunittest
 
 # ==========================================================================
-# Note: March 2012 version, add checking prerequisites such as globus-proxy-utils,
+# Note: March 2012 version, add checking prerequisites such as voms-clients-cpp,
 # to avoid confusion.
 
 class TestGlexec(osgunittest.OSGTestCase):
@@ -58,19 +58,19 @@ gridmapfile -> glexectracking
         TestGlexec.__user_proxy_path = '/tmp/x509up_u'+self.__uid
 
     def test_03_create_user_proxy(self):
-        core.skip_ok_unless_installed('globus-proxy-utils')
+        core.skip_ok_unless_installed('voms-clients-cpp')
         self.skip_ok_if(self.__user_proxy_path == '', "User proxy path does not exist.")
 
         # OK, software is present, now just check it previous tests did create the proxy already so
         # we don't do it twice
-        command = ('grid-proxy-info', '-f', self.__user_proxy_path)
+        command = ('voms-proxy-info', '-f', self.__user_proxy_path)
         status, _, _ = core.system(command, True)
 
         if int(status) != 0: # no proxy found for some reason, try to construct a new one
-            command = ('grid-proxy-init', '-out', self.__user_proxy_path)
+            command = ('voms-proxy-init', '-out', self.__user_proxy_path)
             password = core.options.password + '\n'
             status, _, _ = core.system(command, True, password)
-            self.assert_(status == 0, 'grid-proxy-init for user ' +core.options.username +
+            self.assert_(status == 0, 'voms-proxy-init for user ' +core.options.username +
                          ' has failed even though globus-proxy-util was present')
 
         # we need to have the right permissions on that proxy for glexec to agree to work,
@@ -80,8 +80,8 @@ gridmapfile -> glexectracking
         os.environ['GLEXEC_CLIENT_CERT'] = self.__glexec_client_cert
 
     def test_04_glexec_switch_id(self):
-        core.skip_ok_unless_installed('glexec', 'globus-proxy-utils')
-        command = ('grid-proxy-info', '-f', self.__user_proxy_path)
+        core.skip_ok_unless_installed('glexec', 'voms-clients-cpp')
+        command = ('voms-proxy-info', '-f', self.__user_proxy_path)
         status, stdout, _ = core.system(command, True)
 
         if int(status) != 0: # no proxy found even after previous checks, have to skip
@@ -97,7 +97,7 @@ gridmapfile -> glexectracking
                      'Glexec identity switch from root to user ' + core.options.username + ' failed')
 
     def test_05_glexec_proxy_cleanup(self):
-        core.skip_ok_unless_installed('glexec', 'globus-proxy-utils')
+        core.skip_ok_unless_installed('glexec', 'voms-clients-cpp')
 
         try:
             os.unlink(self.__glexec_client_cert)

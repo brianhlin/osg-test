@@ -16,7 +16,7 @@ class TestMyProxy(osgunittest.OSGTestCase):
         core.system(command, user=True)
 
     def test_02_check_usercert_pass(self):
-        core.skip_ok_unless_installed('globus-proxy-utils', 'myproxy', 'myproxy-server')
+        core.skip_ok_unless_installed('voms-clients-cpp', 'myproxy', 'myproxy-server')
         self.skip_ok_unless(core.state['myproxy.started-server'], 'MyProxy server failed to start')
 
         user = pwd.getpwnam(core.options.username)
@@ -24,15 +24,15 @@ class TestMyProxy(osgunittest.OSGTestCase):
         command = ('openssl', 'rsa', '-in', userkey, '-passin', 'pass:', '-text')
         exit_status, _, _ = core.system(command, user=True)
         if exit_status == 0:
-            core.system(('grid-proxy-destroy',), user=True)
+            core.system(('voms-proxy-destroy',), user=True)
             self.fail('user cert has no password')
 
     def test_03_proxypath(self):
         # Grab the path of the proxy created for the proxy test
-        core.skip_ok_unless_installed('globus-proxy-utils', 'myproxy', 'myproxy-server')
+        core.skip_ok_unless_installed('voms-clients-cpp', 'myproxy', 'myproxy-server')
         self.skip_ok_unless(core.state['myproxy.started-server'], 'MyProxy server failed to start')
 
-        command = ('grid-proxy-info', '-path')
+        command = ('voms-proxy-info', '-path')
         _, proxypath, _ = core.system(command, user=True)
         core.state['proxy.path'] = proxypath.split('\n')[0]
 
