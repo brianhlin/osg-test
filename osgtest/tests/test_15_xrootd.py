@@ -6,6 +6,7 @@ import osgtest.library.service as service
 import osgtest.library.osgunittest as osgunittest
 
 XROOTD_CFG_TEXT = """\
+ofs.trace all
 cms.space min 2g 5g
 xrootd.seclib /usr/lib64/libXrdSec-4.so
 sec.protocol /usr/lib64 gsi -certdir:/etc/grid-security/certificates \
