@@ -27,7 +27,6 @@ if exec xrootd
   http.cadir /etc/grid-security/certificates
   http.cert /etc/grid-security/xrd/xrdcert.pem
   http.key /etc/grid-security/xrd/xrdkey.pem
-  http.secxtractor /usr/lib64/libXrdLcmaps.so
   http.listingdeny yes
   http.desthttps yes
 
@@ -42,6 +41,7 @@ if exec xrootd
   xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
 
 fi
+
 """
 
 class TestStartXrootdTPC(osgunittest.OSGTestCase):
@@ -67,6 +67,7 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
         if all([core.rpm_is_installed(x) for x in lcmaps_packages]):
             core.log_message("Using xrootd-lcmaps authentication")
             sec_protocol = '-authzfun:libXrdLcmaps.so -authzfunparms:--loglevel,5'
+            #XROOTD_CFG_TEXT += "http.secxtractor /usr/lib64/libXrdLcmaps.so/n"
             if core.PackageVersion('xrootd-lcmaps') >= '1.4.0':
                 sec_protocol += ',--policy,authorize_only'
         else:
