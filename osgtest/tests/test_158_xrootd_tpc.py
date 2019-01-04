@@ -39,16 +39,9 @@ if exec xrootd
   # Enable Macaroons
   ofs.authlib libXrdMacaroons.so libXrdAccSciTokens.so
 
-fi
-
-if named xrd-TPC-1
   xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
-fi
 
-if named xrd-TPC-2
-  xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
 fi
-end
 """
 
 class TestStartXrootdTPC(osgunittest.OSGTestCase):
@@ -56,7 +49,8 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
     def test_01_start_xrootd(self):
         core.config['certs.xrootdcert'] = '/etc/grid-security/xrd/xrdcert.pem'
         core.config['certs.xrootdkey'] = '/etc/grid-security/xrd/xrdkey.pem'
-        core.config['xrootd.tpc.config'] = '/etc/xrootd/xrootd-third-party-copy.cfg'
+        core.config['xrootd.tpc.config-1'] = '/etc/xrootd/xrootd-third-party-copy-1.cfg'
+        core.config['xrootd.tpc.config-2'] = '/etc/xrootd/xrootd-third-party-copy-2.cfg'
         core.config['xrootd.tpc.http-port1'] = HTTP_PORT1
         core.config['xrootd.tpc.http-port2'] = HTTP_PORT2
         core.state['xrootd.started-http-server-1'] = False
@@ -79,17 +73,21 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
             core.log_message("Using XRootD mapfile authentication")
             sec_protocol = '-gridmap:/etc/grid-security/xrd/xrdmapfile'
 
-        files.append(core.config['xrootd.tpc.config'],
-                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.port']),
+        files.append(core.config['xrootd.tpc.config-1'],
+                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port1']),
+                     owner='xrootd', backup=True)
+        files.append(core.config['xrootd.tpc.config-2'],
+                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port2']),
                      owner='xrootd', backup=True)
         core.state['xrootd.tpc.backups-exist'] = True
 
     def test_02_start_xrootd(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
-        core.config['xrootd_tpc_service_1'] = "xrd-TPC-1@third-party-copy"
-        core.config['xrootd_tpc_service_2'] = "xrd-TPC-2@third-party-copy"
+        core.config['xrootd_tpc_service_1'] = "xrootd@third-party-copy-1"
+        core.config['xrootd_tpc_service_2'] = "xrootd@third-party-copy-2"
         service.check_start(core.config['xrootd_tpc_service_1'])
         service.check_start(core.config['xrootd_tpc_service_2'])
         
-        core.state['xrootd_tpc_service_1'] = True
-        core.state['xrootd_tpc_service_2'] = True
+        core.state['xrootd.started-http-server-1'] = True
+        core.state['xrootd.started-http-server-2'] = True
+
