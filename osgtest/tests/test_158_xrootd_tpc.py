@@ -42,13 +42,13 @@ if exec xrootd
 
 fi
 
+all.sitename VDTTESTSITE
+
 """
 
 class TestStartXrootdTPC(osgunittest.OSGTestCase):
     @core.elrelease(7,8)
-    def test_01_start_xrootd(self):
-        core.config['certs.xrootdcert'] = '/etc/grid-security/xrd/xrdcert.pem'
-        core.config['certs.xrootdkey'] = '/etc/grid-security/xrd/xrdkey.pem'
+    def test_01_configure_xrootd(self):
         core.config['xrootd.tpc.config-1'] = '/etc/xrootd/xrootd-third-party-copy-1.cfg'
         core.config['xrootd.tpc.config-2'] = '/etc/xrootd/xrootd-third-party-copy-2.cfg'
         core.config['xrootd.tpc.http-port1'] = HTTP_PORT1
@@ -58,7 +58,7 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
         core.state['xrootd.tpc.backups-exist'] = False
 
         self.skip_ok_unless(core.options.adduser, 'user not created')
-        core.skip_ok_unless_installed('xrootd', by_dependency=True)
+        core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
 
         user = pwd.getpwnam("xrootd")
         core.skip_ok_unless_installed('globus-proxy-utils')
