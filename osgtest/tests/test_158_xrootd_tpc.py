@@ -37,9 +37,8 @@ if exec xrootd
 
   # Enable Macaroons
   ofs.authlib libXrdMacaroons.so libXrdAccSciTokens.so
-
-  xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
   xrd.port %d
+  xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
 fi
 
 all.sitename VDTTESTSITE
