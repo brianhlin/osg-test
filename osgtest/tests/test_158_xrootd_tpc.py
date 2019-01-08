@@ -39,7 +39,7 @@ if exec xrootd
   ofs.authlib libXrdMacaroons.so libXrdAccSciTokens.so
 
   xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
-
+  xrd.port %d
 fi
 
 all.sitename VDTTESTSITE
@@ -75,10 +75,10 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
             sec_protocol = '-gridmap:/etc/grid-security/xrd/xrdmapfile'
 
         files.append(core.config['xrootd.tpc.config-1'],
-                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port1']),
+                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port1'], core.config['xrootd.tpc.http-port1']),
                      owner='xrootd', backup=True)
         files.append(core.config['xrootd.tpc.config-2'],
-                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port2']),
+                     XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port2'], core.config['xrootd.tpc.http-port1']),
                      owner='xrootd', backup=True)
         core.state['xrootd.tpc.backups-exist'] = True
 
