@@ -75,19 +75,18 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
 
         files.append(core.config['xrootd.tpc.config-1'],
                      XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port1'], core.config['xrootd.tpc.http-port1']),
-                     owner='xrootd', backup=True)
+                     owner='xrootd', force=True, backup=True)
         files.append(core.config['xrootd.tpc.config-2'],
                      XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port2'], core.config['xrootd.tpc.http-port1']),
-                     owner='xrootd', backup=True)
+                     owner='xrootd', force=True, backup=True)
         core.state['xrootd.tpc.backups-exist'] = True
 
     def test_02_start_xrootd(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
         core.config['xrootd_tpc_service_1'] = "xrootd@third-party-copy-1"
         core.config['xrootd_tpc_service_2'] = "xrootd@third-party-copy-2"
-        service.check_start(core.config['xrootd_tpc_service_1'])
-        service.check_start(core.config['xrootd_tpc_service_2'])
-        
+        service.check_start(core.config['xrootd_tpc_service_1'], logToCheck = '/var/log/xrootd/third-party-copy-1/xrootd.log')
+        service.check_start(core.config['xrootd_tpc_service_2'], logToCheck = '/var/log/xrootd/third-party-copy-2/xrootd.log')
         core.state['xrootd.started-http-server-1'] = True
         core.state['xrootd.started-http-server-2'] = True
 
