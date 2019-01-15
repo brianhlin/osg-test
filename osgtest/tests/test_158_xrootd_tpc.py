@@ -73,12 +73,12 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
             core.log_message("Using XRootD mapfile authentication")
             sec_protocol = '-gridmap:/etc/grid-security/xrd/xrdmapfile'
 
-        files.append(core.config['xrootd.tpc.config-1'],
+        files.write(core.config['xrootd.tpc.config-1'],
                      XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port1'], core.config['xrootd.tpc.http-port1']),
-                     owner='xrootd', force=True, backup=True)
-        files.append(core.config['xrootd.tpc.config-2'],
+                     owner='xrootd', backup=True, chown=(user.pw_uid, user.pw_gid))
+        files.write(core.config['xrootd.tpc.config-2'],
                      XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port2'], core.config['xrootd.tpc.http-port1']),
-                     owner='xrootd', force=True, backup=True)
+                     owner='xrootd', backup=True, chown=(user.pw_uid, user.pw_gid))
         core.state['xrootd.tpc.backups-exist'] = True
 
     def test_02_start_xrootd(self):
