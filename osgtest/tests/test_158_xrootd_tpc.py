@@ -29,7 +29,7 @@ if exec xrootd
   http.key /etc/grid-security/xrd/xrdkey.pem
   http.listingdeny yes
   http.desthttps yes
-
+  http.trace all debug
   # Enable third-party-copy
   http.exthandler xrdtpc libXrdHttpTPC.so
   # Pass the bearer token to the Xrootd authorization framework.
@@ -67,8 +67,7 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
             core.log_message("Using xrootd-lcmaps authentication")
             sec_protocol = '-authzfun:libXrdLcmaps.so -authzfunparms:--loglevel,5'
             #XROOTD_CFG_TEXT += "http.secxtractor /usr/lib64/libXrdLcmaps.so/n"
-            if core.PackageVersion('xrootd-lcmaps') >= '1.4.0':
-                sec_protocol += ',--policy,authorize_only'
+            sec_protocol += ',--policy,authorize_only'
         else:
             core.log_message("Using XRootD mapfile authentication")
             sec_protocol = '-gridmap:/etc/grid-security/xrd/xrdmapfile'
