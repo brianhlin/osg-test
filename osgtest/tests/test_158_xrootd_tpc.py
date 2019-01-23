@@ -40,7 +40,8 @@ if exec xrootd
   xrd.port %d
   xrd.protocol http:%d /usr/lib64/libXrdHttp-4.so
 fi
-
+http.exthandler xrdmacaroons libXrdMacaroons.so
+macaroons.secretkey /etc/xrootd/macaroon-secret
 all.sitename VDTTESTSITE
 
 """
@@ -79,8 +80,15 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
                      XROOTD_CFG_TEXT % (sec_protocol, core.config['xrootd.tpc.http-port2'], core.config['xrootd.tpc.http-port1']),
                      owner='xrootd', backup=True, chown=(user.pw_uid, user.pw_gid))
         core.state['xrootd.tpc.backups-exist'] = True
+ 
+    def test_02_create_secret_key(self):
+        core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
+        core.config['xrootd.tpc.macaroon-secret'] = '/etc/xrootd/macaroon-secret'
+        core.check_system(["openssl", "rand", "-base64", "-out",
+                               core.config['xrootd.tpc.macaroon-secret']], "Creating simmetric key")
 
-    def test_02_start_xrootd(self):
+
+    def test_03_start_xrootd(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
         core.config['xrootd_tpc_service_1'] = "xrootd@third-party-copy-1"
         core.config['xrootd_tpc_service_2'] = "xrootd@third-party-copy-2"
