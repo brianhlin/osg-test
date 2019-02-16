@@ -82,7 +82,8 @@ class TestStartXrootdTPC(osgunittest.OSGTestCase):
  
     def test_02_create_secrets(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
-        core.config['xrootd.tpc.macaroon-secret-1'] = '/etc/xrootd/macaroon-secret'
+        core.config['xrootd.tpc.macaroon-secret-1'] = '/etc/xrootd/macaroon-secret-1'
+        core.config['xrootd.tpc.macaroon-secret-2'] = '/etc/xrootd/macaroon-secret-2'
         core.check_system(["openssl", "rand", "-base64", "-out",
                                core.config['xrootd.tpc.macaroon-secret-1'], "64"], "Creating simmetric key")
         core.check_system(["openssl", "rand", "-base64", "-out",
