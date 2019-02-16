@@ -30,5 +30,18 @@ class TestXrootdTPC(osgunittest.OSGTestCase):
                                 headers={"Content-Type": "application/macaroon-request"},
                                 data=json.dumps(data_json)
                                )
+        self.assertEqual(response.status_code, requests.codes.ok, "Problems Generating the macaroon")
+        Macaroon1 = response.text
+        data_json = {"caveats": "activity:%s" % "UPLOAD",
+                 "validity": 20}
+        urlServer1 = ("http://",core.gethostname(),":9002", '/tmp/tmp-tpc.txt')
+        response = session.post(urlServer1,
+                                headers={"Content-Type": "application/macaroon-request"},
+                                data=json.dumps(data_json)
+                               )
+        self.assertEqual(response.status_code, requests.codes.ok, "Problems Generating the macaroon")
+        Macaroon2 = response.text
+
+
         
-    
+        
