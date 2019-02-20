@@ -12,6 +12,7 @@ import osgtest.library.osgunittest as osgunittest
 
 class TestXrootdTPC(osgunittest.OSGTestCase):
 
+    __data_path = '/usr/share/osg-test/test_gridftp_data.txt'
 
     def test_01_create_macaroons(self):
         core.skip_ok_unless_installed('xrootd', 'xrootd-scitokens', by_dependency=True)
@@ -25,13 +26,13 @@ class TestXrootdTPC(osgunittest.OSGTestCase):
         session.verify = False
         data_json = {"caveats": "activity:%s" % "DOWNLOAD",
                  "validity": 20}
-        core.config['xrootd.tpc.url-1'] = ("http://",core.gethostname(),":9001", '/tmp/tmp.txt')
+        core.config['xrootd.tpc.url-1'] = ("http://",core.gethostname(),":9001", TestXrootdTPC.__data_path)
         response = session.post(core.config['xrootd.tpc.url-1'], 
                                 headers={"Content-Type": "application/macaroon-request"},
                                 data=json.dumps(data_json)
                                )
         self.assertEqual(response.status_code, requests.codes.ok, "Problems Generating the macaroon")
-        core.config['xrootd.tpc.macaroon-1'] = = response.text
+        core.config['xrootd.tpc.macaroon-1'] = response.text
         data_json = {"caveats": "activity:%s" % "UPLOAD",
                  "validity": 20}
         core.config['xrootd.tpc.url-2'] = ("http://",core.gethostname(),":9002", '/tmp/tmp-tpc.txt')
