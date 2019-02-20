@@ -25,23 +25,32 @@ class TestXrootdTPC(osgunittest.OSGTestCase):
         session.verify = False
         data_json = {"caveats": "activity:%s" % "DOWNLOAD",
                  "validity": 20}
-        urlServer1 = ("http://",core.gethostname(),":9001", '/tmp/tmp.txt')
-        response = session.post(urlServer1, 
+        core.config['xrootd.tpc.url-1'] = ("http://",core.gethostname(),":9001", '/tmp/tmp.txt')
+        response = session.post(core.config['xrootd.tpc.url-1'], 
                                 headers={"Content-Type": "application/macaroon-request"},
                                 data=json.dumps(data_json)
                                )
         self.assertEqual(response.status_code, requests.codes.ok, "Problems Generating the macaroon")
-        Macaroon1 = response.text
+        core.config['xrootd.tpc.macaroon-1'] = = response.text
         data_json = {"caveats": "activity:%s" % "UPLOAD",
                  "validity": 20}
-        urlServer1 = ("http://",core.gethostname(),":9002", '/tmp/tmp-tpc.txt')
-        response = session.post(urlServer1,
+        core.config['xrootd.tpc.url-2'] = ("http://",core.gethostname(),":9002", '/tmp/tmp-tpc.txt')
+        response = session.post(urlServer2,
                                 headers={"Content-Type": "application/macaroon-request"},
                                 data=json.dumps(data_json)
                                )
         self.assertEqual(response.status_code, requests.codes.ok, "Problems Generating the macaroon")
-        Macaroon2 = response.text
+        core.config['xrootd.tpc.macaroon-2'] = response.text
+    
 
-
-        
+    def test_02_initate_tpc(self):
+        with requests.Session() as session:
+            session.verify = False
+            headers['Authorization'] = 'Bearer %s' % core.config['xrootd.tpc.macaroon-1']
+            headers['Source'] = core.config['xrootd.tpc.url-1']
+            headers['Copy-Header'] = 'Authorization: Bearer %s' % core.config['xrootd.tpc.macaroon-2']
+            resp = session.request('COPY', core.config['xrootd.tpc.url-2'], headers=headers, allow_redirects = True)
+            print resp.status_code
+            print resp.headers
+            print resp.text
         
