@@ -45,13 +45,13 @@ class TestXrootdTPC(osgunittest.OSGTestCase):
     
 
     def test_02_initate_tpc(self):
-        with requests.Session() as session:
-            session.verify = False
-            headers['Authorization'] = 'Bearer %s' % core.config['xrootd.tpc.macaroon-1']
-            headers['Source'] = core.config['xrootd.tpc.url-1']
-            headers['Copy-Header'] = 'Authorization: Bearer %s' % core.config['xrootd.tpc.macaroon-2']
-            resp = session.request('COPY', core.config['xrootd.tpc.url-2'], headers=headers, allow_redirects = True)
-            print resp.status_code
-            print resp.headers
-            print resp.text
+        session = requests.Session()
+        session.verify = False
+        headers['Authorization'] = 'Bearer %s' % core.config['xrootd.tpc.macaroon-1']
+        headers['Source'] = core.config['xrootd.tpc.url-1']
+        headers['Copy-Header'] = 'Authorization: Bearer %s' % core.config['xrootd.tpc.macaroon-2']
+        resp = session.request('COPY', core.config['xrootd.tpc.url-2'], headers=headers, allow_redirects = True)
+        print(resp.status_code)
+        print(resp.headers)
+        print(resp.text)
         
