@@ -10,7 +10,7 @@ import osgtest.library.files as files
 import osgtest.library.osgunittest as osgunittest
 
 
-class TestXrootdTPC(osgunittest.OSGTestCase):
+class TestXrootdTpc(osgunittest.OSGTestCase):
 
     __data_path = '/usr/share/osg-test/test_gridftp_data.txt'
 
