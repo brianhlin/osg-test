@@ -177,6 +177,7 @@ def discover_tests():
     test_sequence = open('/usr/share/osg-test/test_sequence')
     test_sequence_lines = [test.strip() for test in test_sequence.readlines()]
     test_files = ['osgtest.tests.' + test for test in test_sequence_lines if test and not test.startswith('#')]
+    print(test_files)
     test_sequence.close()
     # prepend tests that are always safe
     args = ['osgtest.tests.special_certs',
@@ -236,6 +237,8 @@ if __name__ == '__main__':
     get_password()
     core.start_log()
     TESTS = discover_tests()
+    print("post discover tests")
+    print(TESTS)
     if len(TESTS) > 1:
         signal.signal(signal.SIGALRM, signal_alarm_handler)
         signal.alarm(core.options.timeout)
