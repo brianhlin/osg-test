@@ -36,6 +36,8 @@ rpmbuild --define '_topdir /tmp/rpmbuild' -ba /tmp/rpmbuild/SPECS/osg-test.spec
 # After building the RPM, try to install it
 yum localinstall -y /tmp/rpmbuild/RPMS/noarch/osg-test*
 
+rpm -ql osg-test
+
 # HTCondor really, really wants a domain name.  Fake one.
 sed /etc/hosts -e "s/`hostname`/`hostname`.unl.edu `hostname`/" > /etc/hosts.new
 /bin/cp -f /etc/hosts.new /etc/hosts
