@@ -1,14 +1,19 @@
 import os
+
 import osgtest.library.core as core
 import osgtest.library.files as files
 import osgtest.library.mysql as mysql
 import osgtest.library.osgunittest as osgunittest
 import osgtest.library.service as service
 
+import time
+
 CLUSTER_NAME = 'osg_test'
 CTLD_LOG = '/var/log/slurm/slurmctld.log'
 SLURM_LOG = '/var/log/slurm/slurm.log'
 SHORT_HOSTNAME = core.get_hostname().split('.')[0]
+
+SLURM_CONFIG_DIR = '/etc/slurm/'
 
 SLURMDBD_CONFIG = """AuthType=auth/munge
 DbdHost=localhost
@@ -64,16 +69,23 @@ class TestStartSlurm(osgunittest.OSGTestCase):
 
     def test_01_slurm_config(self):
         self.slurm_reqs()
-        if core.PackageVersion('slurm') >= '19.05.2':
-            core.config['slurm.config-dir'] = '/etc'
-        else:
-            core.config['slurm.config-dir'] = '/etc/slurm'
-        core.config['slurm.config'] = os.path.join(core.config['slurm.config-dir'], 'slurm.conf')
+        # In Slurm 19.05.2, /etc/slurm/ is used as the Slurm configuration dir.
+        # However, the ownership of that directory moved to the
+        # 'slurm-examples-config' package.  Instead of installing the
+        # unnecessary package or modifying the packaging, just make sure the dir
+        # exists.
+        try:
+            os.mkdir(SLURM_CONFIG_DIR)
+        except OSError as exc:
+            # Move on if the directory already exists
+            if exc.errno == 17:
+                pass
+        core.config['slurm.config'] = os.path.join(SLURM_CONFIG_DIR, 'slurm.conf')
         files.write(core.config['slurm.config'],
                     SLURM_CONFIG % {'short_hostname': SHORT_HOSTNAME, 'cluster': CLUSTER_NAME, 'ctld_log': CTLD_LOG},
                     owner='slurm',
                     chmod=0o644)
-        core.config['cgroup.config'] = os.path.join(core.config['slurm.config-dir'], 'cgroup.conf')
+        core.config['cgroup.config'] = os.path.join(SLURM_CONFIG_DIR, 'cgroup.conf')
         config = SLURM_CGROUPS_CONFIG
         if core.el_release() == 6:
             config += "\nCgroupMountpoint=/cgroup"
@@ -82,7 +94,7 @@ class TestStartSlurm(osgunittest.OSGTestCase):
                     owner='slurm',
                     chmod=0o644)
 
-        core.config['cgroup_allowed_devices_file.conf'] = os.path.join(core.config['slurm.config-dir'],
+        core.config['cgroup_allowed_devices_file.conf'] = os.path.join(SLURM_CONFIG_DIR,
                                                                        'cgroup_allowed_devices_file.conf')
         files.write(core.config['cgroup_allowed_devices_file.conf'],
                     SLURM_CGROUPS_DEVICE_CONFIG,
@@ -94,7 +106,7 @@ class TestStartSlurm(osgunittest.OSGTestCase):
         self.slurm_reqs()
         core.skip_ok_unless_installed('slurm-slurmdbd')
         self.skip_bad_unless(mysql.is_running(), 'slurmdbd requires mysql')
-        core.config['slurmdbd.config'] = os.path.join(core.config['slurm.config-dir'], 'slurmdbd.conf')
+        core.config['slurmdbd.config'] = os.path.join(SLURM_CONFIG_DIR, 'slurmdbd.conf')
         core.config['slurmdbd.user'] = "'osg-test-slurm'@'localhost'"
         core.config['slurmdbd.name'] = "osg_test_slurmdb"
 
