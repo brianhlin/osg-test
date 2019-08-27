@@ -83,8 +83,7 @@ class TestInstall(osgunittest.OSGTestCase):
         command = ['rpm', '-Uvh', rpm_url]
         core.check_system(command, 'Update osg-release')
 
-        core.config['yum.clean_repos'] = ['osg'] + core.options.updaterepos
-        yum.clean(*core.config['yum.clean_repos'])
+        yum.clean()
 
         # If update repos weren't specified, just use osg-release
         if not core.options.updaterepos:

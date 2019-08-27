@@ -79,7 +79,7 @@ class TestCleanup(osgunittest.OSGTestCase):
         command = ['rpm', '-Uvh', rpm_url]
         core.check_system(command, 'Downgrade osg-release')
 
-        yum.clean(*core.config['yum.clean_repos'])
+        yum.clean()
 
     def test_02_remove_packages(self):
         # We didn't ask to install anything
