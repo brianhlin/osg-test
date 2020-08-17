@@ -17,6 +17,9 @@ env:
   - OSG_RELEASE=3.5 OS_VERSION=7 PKG_SET=singularity
   - OSG_RELEASE=3.5 OS_VERSION=7 PKG_SET=stashcache
   - OSG_RELEASE=3.5 OS_VERSION=7 PKG_SET=xrootd
+  - OSG_RELEASE=3.5 OS_VERSION=8 PKG_SET=singularity
+  - OSG_RELEASE=3.5 OS_VERSION=8 PKG_SET=stashcache
+  - OSG_RELEASE=3.5 OS_VERSION=8 PKG_SET=xrootd
 
 services:
   - docker
