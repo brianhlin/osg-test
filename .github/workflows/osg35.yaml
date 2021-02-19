@@ -52,6 +52,15 @@ jobs:
         package_list:
           - ['osg-wn-client', 'osg-oasis', 'singularity']
     steps:
+      - uses: actions/checkout@v2
+        with:
+          path: osg-test
+
+      - uses: actions/checkout@v2
+        with:
+          repository: opensciencegrid/osg-ca-generator
+          path: osg-ca-generator
+
       - name: Load cached image
         uses: actions/cache@v2
         with:
