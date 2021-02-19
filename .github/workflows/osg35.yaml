@@ -1,0 +1,77 @@
+name: OSG 3.5 tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  schedule:
+    - cron: '23 4 * * *'
+
+jobs:
+  build-test-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: osg-test
+
+      - uses: actions/checkout@v2
+        with:
+          repository: opensciencegrid/osg-ca-generator
+          path: osg-ca-generator
+
+      - name: Cache osg-test image
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: osg-test-buildx-${{ github.sha }}
+          # allow cache hits from previous runs of the current branch,
+          # parent branch, then upstream branches, in that order
+          restore-keys: |
+            osg-test-buildx-
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v2.2.0
+        with:
+          pull: True
+          context: .
+          file: osg-test/Dockerfile
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+
+  run-tests:
+    runs-on: ubuntu-latest
+    needs: [build-test-images]
+    strategy:
+      fail-fast: False
+      matrix:
+        package_list:
+          - ['osg-wn-client', 'osg-oasis', 'singularity']
+    steps:
+      - name: Load cached image
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: osg-test-buildx-${{ github.sha }}
+  
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Load image into 'docker images'
+        uses: docker/build-push-action@v2.2.0
+        with:
+          load: True
+          context: .
+          file: osg-test/Dockerfile
+          tags: osg-test:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+
+      - name: Run tests
+        run: |
+          docker run --privileged \
+                 osg-test:latest \
+                   --help
