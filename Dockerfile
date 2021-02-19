@@ -8,10 +8,10 @@ RUN yum install -y \
         openssl \
         python36-rpm
 
-COPY osg-test         /src/osg-test
-COPY osg-ca-generator /src/osg-ca-generator
-
 WORKDIR /src
+
+COPY osg-ca-generator /src/osg-ca-generator
+COPY osg-test         /src/osg-test
 
 RUN make -C osg-test install && make -C osg-ca-generator install
 
