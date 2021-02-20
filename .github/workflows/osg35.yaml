@@ -52,6 +52,16 @@ jobs:
       matrix:
         yum_repos:
           - '3.5; osg'
+          - '3.5; osg, epel-testing'
+          - '3.5; osg-rolling'
+          - '3.5; osg-testing'
+          - '3.5; osg > osg-testing'
+          - '3.4; osg > 3.5/osg'
+          - '3.5; osg, osg-upcoming'
+          - '3.5; osg, osg-upcoming, epel-testing'
+          - '3.5; osg-rolling, osg-upcoming-rolling'
+          - '3.5; osg-testing, osg-upcoming-testing'
+          - '3.5; osg > osg-testing, osg-upcoming-testing'
         package_set:
           - label: Worker Node
             packages:
