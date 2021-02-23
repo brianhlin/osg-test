@@ -103,7 +103,8 @@ jobs:
             "$YUM_REPOS" \
             "$LABEL" \
             "$PACKAGES" \
-            "$GITHUB_EVENT_NAME"
+            "$GITHUB_EVENT_NAME" && \
+          cat /tmp/osg-test-docker.conf
 
       - name: Load cached image
         uses: actions/cache@v2
