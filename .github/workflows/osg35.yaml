@@ -124,9 +124,18 @@ jobs:
           tags: osg-test:latest
           cache-from: type=local,src=/tmp/.buildx-cache
 
-      - name: Run tests
+      - name: Start osg-test container
         run: |
           docker run --privileged \
+                 --detach \
+                 --name ${GITHUB_SHA} \
+                 --env "container=docker" \
                  --volume /tmp/osg-test-docker.conf:/tmp/osg-test-docker.conf \
+                 --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
                  osg-test:latest \
-                 --config /tmp/osg-test-docker.conf
+                 /usr/sbin/init
+
+      - name: Run tests
+        run: |
+          docker exec ${GITHUB_SHA} \
+                 /usr/sbin/osg-test --config /tmp/osg-test-docker.conf
