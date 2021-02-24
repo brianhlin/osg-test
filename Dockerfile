@@ -13,6 +13,9 @@ RUN yum install -y epel-release && \
     yum install -y \
         # pre-install audit to avoid pre-un bug in the packaging
         audit \
+        # required for SELinux
+        policycoreutils \
+        libselinux-utils \
         make \
         openssl \
         python36-rpm
