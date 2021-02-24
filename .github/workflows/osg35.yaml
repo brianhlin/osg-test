@@ -58,6 +58,21 @@ jobs:
               - osg-wn-client
               - osg-oasis
               - singularity
+          - label: Compute Entrypoint
+            packages:
+              - osg-ce-condor
+              - htcondor-ce-view
+              - torque-server
+              - torque-mom
+              - torque-client
+              - torque-scheduler
+              - slurm
+              - slurm-slurmd
+              - slurm-slurmctld
+              - slurm-perlapi
+              - slurm-slurmdbd
+              - mariadb-server
+              - globus-proxy-utils
     steps:
       - uses: actions/checkout@v2
         with:
