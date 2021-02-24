@@ -9,6 +9,7 @@ ARG OSG_RELEASE=3.5
 
 RUN yum install -y epel-release && \
     yum install -y yum -y install http://repo.opensciencegrid.org/osg/${OSG_RELEASE}/osg-${OSG_RELEASE}-el${IMAGE_BASE_TAG#centos}-release-latest.rpm && \
+    yum update -y && \
     yum install -y \
         make \
         openssl \
