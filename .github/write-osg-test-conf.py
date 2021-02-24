@@ -12,7 +12,8 @@ SOURCES = sys.argv[1]
 IS_NIGHTLY = sys.argv[4] == 'schedule'
 
 PACKAGES = PackageSet(sys.argv[2],
-                      sys.argv[3].split(','))
+                      sys.argv[3].split(','),
+                      selinux=False)  # SELinux doesn't work in containers
 
 
 write_osg_test_configuration('docker',
