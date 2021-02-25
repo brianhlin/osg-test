@@ -20,6 +20,10 @@ RUN yum install -y epel-release && \
         openssl \
         python36-rpm
 
+# HTCondor really, really wants a domain name.  Fake one.
+RUN sed /etc/hosts -e "s/`hostname`/`hostname`.opensciencegrid.org `hostname`/" > /etc/hosts.new && \
+    /bin/cp -f /etc/hosts.new /etc/hosts
+
 WORKDIR /src
 
 COPY osg-ca-generator /src/osg-ca-generator
