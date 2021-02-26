@@ -18,7 +18,7 @@ RUN yum install -y epel-release && \
         libselinux-utils \
         make \
         openssl \
-        python36-rpm
+        python3-rpm
 
 WORKDIR /src
 
