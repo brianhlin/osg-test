@@ -1,4 +1,4 @@
-name: OSG 3.6 OSG WN tests
+name: OSG 3.6 tests
 
 on:
   push:
@@ -63,6 +63,25 @@ jobs:
               - osg-wn-client
               - osg-oasis
               - singularity
+          - label: Compute Entrypoint
+            packages:
+              - osg-ce-condor
+              - htcondor-ce-view
+              - torque-server
+              - torque-mom
+              - torque-client
+              - torque-scheduler
+              - slurm
+              - slurm-slurmd
+              - slurm-slurmctld
+              - slurm-perlapi
+              - slurm-slurmdbd
+              - mariadb-server
+          - label: Central Collector
+            packages:
+              - htcondor-ce-collector
+              - htcondor-ce-view
+              - fetch-crl
         dver: ['7', '8']
     steps:
       - uses: actions/checkout@v2
