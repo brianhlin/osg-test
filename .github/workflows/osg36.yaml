@@ -120,12 +120,6 @@ jobs:
                  osg-test:latest \
                  /usr/sbin/init
 
-      - name: Set fake container hostname for HTCondor
-        run: |
-          docker exec ${GITHUB_SHA} \
-          sed /etc/hosts -e "s/$(hostname)/$(hostname).opensciencegrid.org $(hostname)/" > /etc/hosts.new && \
-          /bin/cp -f /etc/hosts.new /etc/hosts
-
       - name: Run tests
         run: |
           docker exec ${GITHUB_SHA} \
