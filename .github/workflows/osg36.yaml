@@ -56,7 +56,7 @@ jobs:
       fail-fast: False
       matrix:
         yum_repos:
-          - '3.6; osg-prerelease'
+          - '3.6; osg-testing'
         package_set:
           - label: Worker Node
             packages:
