@@ -29,11 +29,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: osg-test--${{ dver }}-buildx-${{ github.sha }}
+          key: osg-test-${{ matrix.dver }}-buildx-${{ github.sha }}
           # allow cache hits from previous runs of the current branch,
           # parent branch, then upstream branches, in that order
           restore-keys: |
-            osg-test-${{ dver }}-buildx-
+            osg-test-${{ matrix.dver }}-buildx-
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -120,7 +120,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: osg-test-centos-${{ dver }}-buildx-${{ github.sha }}
+          key: osg-test-centos-${{ matrix.dver }}-buildx-${{ github.sha }}
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
