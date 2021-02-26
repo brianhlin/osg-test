@@ -1,4 +1,4 @@
-name: OSG 3.5 tests
+name: OSG 3.6 OSG WN tests
 
 on:
   push:
@@ -51,28 +51,13 @@ jobs:
       fail-fast: False
       matrix:
         yum_repos:
-          - '3.5; osg'
+          - '3.6; osg-prerelease'
         package_set:
           - label: Worker Node
             packages:
               - osg-wn-client
               - osg-oasis
               - singularity
-          - label: Compute Entrypoint
-            packages:
-              - osg-ce-condor
-              - htcondor-ce-view
-              - torque-server
-              - torque-mom
-              - torque-client
-              - torque-scheduler
-              - slurm
-              - slurm-slurmd
-              - slurm-slurmctld
-              - slurm-perlapi
-              - slurm-slurmdbd
-              - mariadb-server
-              - globus-proxy-utils
     steps:
       - uses: actions/checkout@v2
         with:
