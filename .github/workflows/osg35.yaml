@@ -127,8 +127,9 @@ jobs:
           docker exec ${GITHUB_SHA} \
           whoami && \
           ls -l /etc && \
-          sed /etc/hosts -e "s/$(hostname)/$(hostname).opensciencegrid.org $(hostname)/" > /etc/hosts.new && \
-          /bin/cp -f /etc/hosts.new /etc/hosts
+          cat /etc/hosts && \
+          sed /etc/hosts -e "s/$(hostname)/$(hostname).opensciencegrid.org $(hostname)/" > /tmp/hosts.new && \
+          /bin/cp -f /tmp/hosts.new /etc/hosts
 
       - name: Run tests
         run: |
