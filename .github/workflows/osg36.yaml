@@ -1,4 +1,4 @@
-name: OSG 3.5 tests
+name: OSG 3.6 tests
 
 on:
   push:
@@ -39,6 +39,8 @@ jobs:
         with:
           pull: True
           context: .
+          build-args: |
+            OSG_RELEASE=3.6
           file: osg-test/Dockerfile
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
@@ -51,28 +53,16 @@ jobs:
       fail-fast: False
       matrix:
         yum_repos:
-          - '3.5; osg'
+          - '3.6; osg-minefield'
         package_set:
-          - label: Worker Node
+          - label: XRootD
             packages:
-              - osg-wn-client
-              - osg-oasis
-              - singularity
-          - label: Compute Entrypoint
-            packages:
-              - osg-ce-condor
-              - htcondor-ce-view
-              - torque-server
-              - torque-mom
-              - torque-client
-              - torque-scheduler
-              - slurm
-              - slurm-slurmd
-              - slurm-slurmctld
-              - slurm-perlapi
-              - slurm-slurmdbd
-              - mariadb-server
-              - globus-proxy-utils
+              - osg-xrootd-standalone
+              - xrootd-multiuser
+              - xrootd-client
+              - xrootd-scitokens
+              - voms-clients-cpp
+              - /usr/sbin/semanage
     steps:
       - uses: actions/checkout@v2
         with:
@@ -134,12 +124,6 @@ jobs:
                  --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
                  osg-test:latest \
                  /usr/sbin/init
-
-      - name: Set fake container hostname for HTCondor
-        run: |
-          docker exec ${GITHUB_SHA} \
-          sed /etc/hosts -e "s/$(hostname)/$(hostname).opensciencegrid.org $(hostname)/" > /etc/hosts.new && \
-          /bin/cp -f /etc/hosts.new /etc/hosts
 
       - name: Run tests
         run: |
