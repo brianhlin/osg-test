@@ -25,7 +25,7 @@ QUEUE_SUPER_USER_MAY_IMPERSONATE = .*"""
         self.skip_bad_unless(core.state['condor.running-service'], 'Condor not running')
 
         # Ensure that the Condor master is available for reconfig
-        self.failUnless(condor.wait_for_daemon(core.config['condor.collectorlog'],
+        self.assertTrue(condor.wait_for_daemon(core.config['condor.collectorlog'],
                                                core.config['condor.collectorlog_stat'],
                                                'Master',
                                                300.0),
